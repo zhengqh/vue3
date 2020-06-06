@@ -1,0 +1,32 @@
+// 后台布局样式
+.el-aside {
+    // width: none !important;
+    height: 100vh;
+}
+
+.el-header {
+    height: 75px !important;
+    padding: 0 !important;
+}
+
+.el-menu {
+    border-right: none !important;
+}
+
+//内容边界修改padding值
+.el-main {
+    padding: 30px !important;
+}
+
+// 导航栏点击后样式
+.el-submenu .el-menu-item {
+    &.is-active {
+        background-color: rgba(245, 108, 108, 0.2) !important;
+    }
+}
+
+li.el-submenu {
+    &.is-active.is-opened .el-submenu__title {
+        background-color: $mainCcolor !important;
+    }
+}
