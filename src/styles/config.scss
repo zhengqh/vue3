@@ -12,3 +12,17 @@ $mainCcolor: #f56c6c;
     -ms-#{$type}: $value;
     #{$type}: $value;
 }
+
+@mixin labelDemo ($width, $align, $labelwidth){
+    float: left;
+    width: $width + px;
+    label{
+        float: left;
+        text-align: $align;
+        width: $labelwidth + px;
+        line-height: 40px;
+    }
+    .content-wrap{
+        margin-left: $labelwidth + px;
+    }
+}
