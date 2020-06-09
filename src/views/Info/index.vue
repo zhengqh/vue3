@@ -42,13 +42,15 @@
         </div>
             <el-button type="warning" @click="dialogStatus">新增</el-button>
             <DialogInfo :flag.sync='dialoginfo' />
-            <el-button type="danger" @click="open">删除</el-button>
+            <el-button type="danger" @click="deleteItem">删除</el-button>
     </div>
 </template>
 
 <script>
 import { reactive, ref, watch, onMounted } from '@vue/composition-api';
 import DialogInfo from './dialog/info'
+// import { confirm } from '@/utils/validate'
+import { global } from '@/utils/global_V3.0'
 export default {
     name: 'InfoIndex',
     components: {DialogInfo},
@@ -76,9 +78,33 @@ export default {
         const dialogStatus = () => {
             dialoginfo.value = true
         }
-        const open = () => {
-            root.confirm()
-      }
+        // 解构global里面的函数
+        const { str: aaa, confirm } = global()
+        watch(() => console.log(aaa.value))
+        const deleteItem = () => {
+            // 第一种全局方法
+            // root.confirm({
+            //     content: '确认删除当前信息，确认后将无法恢复！',
+            //     type: 'warning',
+            //     fn: confirmDelete
+            // })
+            // 第二种全局方法
+            // confirm({
+            //     content: '确认删除当前信息，确认后将无法恢复！',
+            //     type: 'warning',
+            //     fn: confirmDelete
+            // })
+            // 第三种全局方法
+            confirm({
+                content: '确认删除当前信息，确认后将无法恢复！',
+                type: 'warning',
+                fn: confirmDelete,
+                id: 2222
+            })
+        }
+        const confirmDelete = () => {
+            console.log('删除了')
+        }
         // const close = (status) => {
         //     console.log(status)
         //     dialoginfo.value = status
@@ -90,7 +116,7 @@ export default {
             dialoginfo,
             dialogStatus,
             close,
-            open
+            deleteItem
         }
      }
 }

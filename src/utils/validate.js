@@ -1,3 +1,4 @@
+import { MessageBox, Message } from 'element-ui';
 // 处理特殊字符串
 export function stripscript(str) {
   var pattern = new RegExp(
@@ -24,3 +25,30 @@ export function validateCode(value){
 	 let reg = /^[a-z0-9]{6}$/;
 	 return reg.test(value) ? false : true
 }
+
+//自定义方法第二种方式
+// export function confirm(params) {
+//   MessageBox.confirm(params.content, '提示', {
+//         confirmButtonText: '确定',
+//         cancelButtonText: '取消',
+//         type: params.type,
+//         center: true
+//     }).then(() => {
+//         // that.$message({
+//         // type: 'success',
+//         // message: '删除成功!',
+//         // });
+//         // console.log(that)
+//         Message({
+//           type: 'success',
+//           message: '删除成功!',
+//           })
+//         params.fn && params.fn()
+//         // if(params.fn) { params.fn() }
+//     }).catch(() => {
+//         Message({
+//         type: 'info',
+//         message: '已取消删除'
+//         });
+//     })
+// }
