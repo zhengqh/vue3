@@ -109,6 +109,12 @@ export default {
         //     console.log(status)
         //     dialoginfo.value = status
         // }
+        /**
+         * 生命周期
+         */
+        onMounted(() => {
+            root.getInfoCategory()
+        })
         return {
             options,
             value,

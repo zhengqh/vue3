@@ -32,3 +32,13 @@ import service from '@/utils/request';
          data
      })
  }
+ /**
+  * 编辑信息分类
+  */
+export function EditCategory(data){
+    return service.request({
+        method: 'post',
+        url: '/news/editCategory/',
+        data
+    })
+}
