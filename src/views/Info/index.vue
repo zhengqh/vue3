@@ -5,10 +5,10 @@
                 <div class="content-wrap">
                     <el-select v-model="value" placeholder="请选择">
                         <el-option
-                        v-for="item in options"
-                        :key="item.value"
-                        :label="item.label"
-                        :value="item.value">
+                        v-for="item in categoryOptions.item"
+                        :key="item.id"
+                        :label="item.category_name"
+                        :value="item.id">
                         </el-option>
                     </el-select>
                 </div>
@@ -32,17 +32,51 @@
             <div class="content-wrap">
                 <el-select v-model="value" placeholder="请选择">
                     <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
+                    v-for="item in categoryOptions.item"
+                    :key="item.id"
+                    :label="item.category_name"
+                    :value="item.id">
                     </el-option>
                 </el-select>
             </div>
         </div>
+            <el-button type="danger" @click="deleteItem">查询</el-button>
             <el-button type="warning" @click="dialogStatus">新增</el-button>
-            <DialogInfo :flag.sync='dialoginfo' />
-            <el-button type="danger" @click="deleteItem">删除</el-button>
+            <DialogInfo :flag.sync='dialoginfo' :categoryItem="categoryOptions.item" />
+            <!-- table表格  start -->
+        <el-table
+        :data="tableData"
+        style="width: 100%">
+            <el-table-column
+                prop="address"
+                label="标题"
+                width="420">
+            </el-table-column>
+            <el-table-column
+                prop="name"
+                label="类别"
+                width="140">
+            </el-table-column>
+            <el-table-column
+                prop="date"
+                label="日期"
+                width="180">
+            </el-table-column>
+            <el-table-column
+                prop="name"
+                label="管理人"
+                width="150">
+            </el-table-column>
+            <el-table-column
+                label="操作"
+                width="180">
+                <template >
+                    <el-button  type="danger" size="small">查看</el-button>
+                    <el-button type="success" size="small">编辑</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+            <!-- table表格  end -->
     </div>
 </template>
 
@@ -51,26 +85,35 @@ import { reactive, ref, watch, onMounted } from '@vue/composition-api';
 import DialogInfo from './dialog/info'
 // import { confirm } from '@/utils/validate'
 import { global } from '@/utils/global_V3.0'
+import { common } from '@/api/common'
+import { validateUser } from '../../utils/validate';
 export default {
     name: 'InfoIndex',
     components: {DialogInfo},
      setup(props, {root}) {
-        const options =  reactive([{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-        }])
+        //  vue3.0全局的方法getInfoCategory获取分类数据，监听categoryItem进行赋值
+        const { categoryItem, getInfoCategory } = common()
+        const categoryOptions =  reactive({
+            item:[]
+        })
+        //table表格数据
+        const tableData = reactive([{
+            date: '2016-05-02',
+            name: '王小虎',
+            address: '上海市普陀区金沙江路 1518 弄'
+          }, {
+            date: '2016-05-04',
+            name: '王小虎',
+            address: '上海市普陀区金沙江路 1517 弄'
+          }, {
+            date: '2016-05-01',
+            name: '王小虎',
+            address: '上海市普陀区金沙江路 1519 弄'
+          }, {
+            date: '2016-05-03',
+            name: '王小虎',
+            address: '上海市普陀区金沙江路 1516 弄'
+          }])
         const value = ref('')
         const value1 = ref('')
         const dialoginfo = ref(false)
@@ -113,10 +156,20 @@ export default {
          * 生命周期
          */
         onMounted(() => {
-            root.getInfoCategory()
+            // root.getInfoCategory()
+            getInfoCategory()
         })
+        /**
+         * watch
+         */
+        watch(() => categoryItem.item, (value) => {
+            // console.log(value)
+            categoryOptions.item = value
+        })
+        categoryItem
         return {
-            options,
+            categoryOptions,
+            tableData,
             value,
             value1,
             dialoginfo,

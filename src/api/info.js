@@ -1,6 +1,16 @@
 import service from '@/utils/request';
 
 /**
+ * 添加信息
+ */
+export function AddInfo(data){
+    return service.request({
+        method: 'post',
+        url: '/news/add/',
+        data
+    })
+}
+/**
  * 一级分类添加
  */
 

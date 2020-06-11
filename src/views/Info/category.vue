@@ -56,7 +56,13 @@ export default {
     }
   },
   mounted() {
-    this.getCategory()
+    // 直接调用获取分类数据
+    // this.getCategory()
+    // 调用Vuex的异步方法获取分类数据 下面代码一般另外定义一个函数进行调用，比较懒就先这样处理了
+    this.$store.dispatch('common/getInfoCategory').then(response => {
+      console.log(response)
+      this.categoryData.item = response
+    })
   },
   methods:{
     // 提交添加
@@ -126,13 +132,13 @@ export default {
         })
     },
     //获取信息分类
-    getCategory(){
-      GetCategory().then(response => {
-        console.log(response)
-        let data = response.data.data.data
-        this.categoryData.item = data
-      }).catch(error => {})
-    },
+    // getCategory(){
+    //   GetCategory().then(response => {
+    //     console.log(response)
+    //     let data = response.data.data.data
+    //     this.categoryData.item = data
+    //   }).catch(error => {})
+    // },
     //点击添加一级分类按钮
     addFirst(params){
       this.firstCategoryStatus = false
