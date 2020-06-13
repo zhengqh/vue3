@@ -11,6 +11,26 @@ export function AddInfo(data){
     })
 }
 /**
+ * 修改信息
+ */
+export function EditInfo(data){
+    return service.request({
+        method: 'post',
+        url: '/news/editInfo/',
+        data
+    })
+}
+/**
+ *  删除信息
+ */
+export function DeleteInfo(data){
+    return service.request({
+        method: 'post',
+        url: '/news/deleteInfo/',
+        data
+    })
+}
+/**
  * 一级分类添加
  */
 
@@ -19,6 +39,16 @@ export function AddInfo(data){
          method:'post',
          url: '/news/addFirstCategory/',
          data: data
+     })
+ }
+ /**
+  * 子级分类添加
+  */
+ export function AddChildrenCategory(data){
+     return service.request({
+         method: 'post',
+         url: '/news/addChildrenCategory/',
+         data
      })
  }
 
@@ -31,6 +61,16 @@ export function AddInfo(data){
          url: '/news/getCategory/',
          data
      })
+ }
+ /**
+  * 获取信息列表
+  */
+ export function GetList(data) {
+    return service.request({
+        method: 'post',
+        url: '/news/getList/',
+        data
+    })
  }
  /**
   * 删除信息分类

@@ -1,12 +1,13 @@
 <template>
   <el-dialog
-  title="新增"
+  title="编辑"
   :visible.sync="dialogVisible"
   width="50%"
+  @open="open"
   @close="close" >
-    <el-form ref="addInfoFormRef" :model="addInfoForm" label-width="80px">
-        <el-form-item label="活动区域">
-            <el-select v-model="addInfoForm.category" placeholder="请选择活动区域">
+    <el-form ref="addInfoFormRef" :model="editInfoForm" label-width="80px">
+        <el-form-item label="选择分类">
+            <el-select v-model="editInfoForm.category" placeholder="请选择活动区域">
             <el-option 
             v-for="item in categoryItem"
             :key="item.id"
@@ -16,10 +17,10 @@
         </el-select>
         </el-form-item>
         <el-form-item label="标题">
-            <el-input v-model="addInfoForm.title"></el-input>
+            <el-input v-model="editInfoForm.title"></el-input>
         </el-form-item>
-        <el-form-item label="活动形式">
-            <el-input type="textarea" v-model="addInfoForm.content"></el-input>
+        <el-form-item label="内容">
+            <el-input type="textarea" v-model="editInfoForm.content"></el-input>
         </el-form-item>
     </el-form>
     <el-button @click="dialogVisible = false">取 消</el-button>
@@ -28,13 +29,17 @@
 </template>
 
 <script>
-import { AddInfo } from '@/api/info'
+import { AddInfo, GetList, EditInfo } from '@/api/info'
 export default {
     name: 'dialogInfo',
     props: {
         flag:{
             type: Boolean,
             default: false
+        },
+        itemInfoId:{
+            type: String,
+            default: ''
         },
         categoryItem:{
             type: Array,
@@ -45,7 +50,7 @@ export default {
         return{
             dialogVisible: false,
             // 对话框form表单绑定数据
-            addInfoForm: {
+           editInfoForm: {
                 category: '',
                 title: '',
                 content: ''
@@ -55,6 +60,25 @@ export default {
         }
     },
     methods:{
+        open(){
+            let requestData = {
+                id: this.itemInfoId,
+                pageNumber: 1,
+                pageSize: 1
+            }
+            // console.log(this.itemInfoId)
+            GetList(requestData).then(response => {
+                // console.log(response)
+                let responseData = response.data.data.data[0]
+                // console.log(responseData)
+                this.editInfoForm = {
+                category: responseData.categoryId,
+                title: responseData.title,
+                content: responseData.content
+                }
+            })
+        },
+        // 关闭事件
         close(){
             //父子传值方法
             this.dialogVisible = false
@@ -68,24 +92,16 @@ export default {
             this.addInfoForm.title = ''
             this.addInfoForm.content = ''
         },
+        // 提交编辑
         submit() {
-            // let that = this
-            console.log(this.addInfoForm)
-            // return false
             let requestData = {
-                category: this.addInfoForm.category,
-                title: this.addInfoForm.title,
-                content: this.addInfoForm.content
-            }
-            if(!this.addInfoForm.category){
-                this.$message({
-                    message: '分类不能为空！',
-                    type: 'error'
-                })
-                return false;
+                id: this.itemInfoId,
+                categoryId: this.editInfoForm.category,
+                title: this.editInfoForm.title,
+                content: this.editInfoForm.content
             }
             this.submitBtnLoading = true
-            AddInfo(requestData).then(response => {
+            EditInfo(requestData).then(response => {
                 let responseData = response.data
                 this.$message({
                     message: responseData.message,
