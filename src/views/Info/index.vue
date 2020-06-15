@@ -3,14 +3,7 @@
         <div class="label-wrap category">
             <label>类型：</label>
                 <div class="content-wrap">
-                    <el-select v-model="categoryValue" placeholder="请选择">
-                        <el-option
-                        v-for="item in categoryOptions.item"
-                        :key="item.id"
-                        :label="item.category_name"
-                        :value="item.id">
-                        </el-option>
-                    </el-select>
+                    <selectVue :config="configOption" />
                 </div>
         </div>
         <div class="label-wrap date">
@@ -63,7 +56,7 @@
             <el-table-column
                 prop="title"
                 label="标题"
-                width="400">
+                width="370">
             </el-table-column>
             <el-table-column
                 prop="categoryId"
@@ -81,14 +74,15 @@
             <el-table-column
                 prop="user"
                 label="管理人"
-                width="120">
+                width="100">
             </el-table-column>
             <el-table-column
                 label="操作"
-                width="180">
+                width="250">
                 <template slot-scope="scope">
                     <el-button  type="danger" size="small" @click="deleteItem(scope.row.id)">删除</el-button>
                     <el-button type="success" size="small" @click="editItem(scope.row.id)">编辑</el-button>
+                    <el-button type="warning" size="small" @click="detail(scope.row)">编辑详情</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -122,9 +116,11 @@ import { common } from '@/api/common'
 import { validateUser } from '../../utils/validate';
 import { GetList, DeleteInfo } from '@/api/info'
 import { timestampToTime } from '@/utils/common'
+// 选择器组件
+import selectVue from '@c/Select'
 export default {
     name: 'InfoIndex',
-    components: {DialogInfo, DialogEdit},
+    components: {DialogInfo, DialogEdit, selectVue},
      setup(props, {root}) {
         //  vue3.0全局的方法getInfoCategory获取分类数据，监听categoryItem进行赋值
         const { categoryItem, getInfoCategory } = common()
@@ -257,6 +253,31 @@ export default {
             // console.log(itemInfoId.value)
             dialogInfoEdit.value = true
         }
+        //编辑详情
+        const detail = (row) => {
+            // console.log(row)
+            root.$store.commit('infoDetail/UPDATE_STATE_VALUE',{
+                id: {
+                    value: row.id,
+                    sessionKey: 'infoId',
+                    session: true
+                },
+                title: {
+                    value: row.title,
+                    sessionKey: 'infoTitle',
+                    session: true
+                }
+            })
+            // root.$store.commit('infoDetail/SET_ID',row.id)
+            // root.$store.commit('infoDetail/SET_TITLE',row.title)
+            root.$router.push({
+                name: 'InfoDetail',
+                params: {
+                    id: row.id,
+                    title: row.title
+                }
+            })
+        }
         // const close = (status) => {
         //     console.log(status)
         //     dialoginfo.value = status
@@ -355,7 +376,8 @@ export default {
             getList,
             editItem,
             itemInfoId,
-            dialogInfoEdit
+            dialogInfoEdit,
+            detail
         }
      }
 }
@@ -367,13 +389,13 @@ export default {
 .label-wrap{
     &.category { @include labelDemo(160,left,50)}
     &.date {@include labelDemo(430, right, 70)}
-    &.keywords{@include labelDemo(160,right, 60);
+    &.keywords{@include labelDemo(130,right, 60);
         margin-left: 50px
     }
     &.searchInput{ 
         float: left;
-        width: 150px;
-        margin-right: 50px;
+        width: 120px;
+        margin-right: 20px;
     }
     // float: left;
     // &.category{
